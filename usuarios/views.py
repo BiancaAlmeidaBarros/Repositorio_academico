@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .forms import RegistroForm
-
-
-
+from django.contrib import messages
+from .forms import TrabalhoForm
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import ComentarioForm
+from .models import Trabalho, Comentario, Perfil
+from django.contrib.auth.decorators import login_required
 def login_view(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -16,10 +18,6 @@ def login_view(request):
         else:
             return render(request, 'login.html', {'erro':'Usuário ou senha inválidos'})
     return render(request, 'login.html')
-
-
-from django.contrib.auth.models import User
-
 
 def register_view(request):
     if request.method == 'POST':
@@ -55,12 +53,6 @@ def register_view(request):
 
 
 
-
-from django.contrib.auth.decorators import login_required
-
-
-
-
 @login_required
 def dashboard(request):
     perfil = Perfil.objects.get(user=request.user)
@@ -83,12 +75,6 @@ def dashboard(request):
 def logout_view(request):
     logout(request)
     return redirect('/')
-
-
-
-from django.contrib.auth.decorators import login_required
-
-from .forms import TrabalhoForm
 
 
 @login_required
@@ -144,9 +130,6 @@ def editar_trabalho(request, trabalho_id):
     return render(request, 'usuarios/editar_trabalho.html', {'form': form, 'trabalho': trabalho})
 
 
-from django.contrib.auth.decorators import login_required
-
-
 @login_required
 def excluir_trabalho(request, trabalho_id):
     trabalho = get_object_or_404(Trabalho, id=trabalho_id)
@@ -159,14 +142,6 @@ def excluir_trabalho(request, trabalho_id):
         trabalho.delete()
 
     return redirect('dashboard')
-
-
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ComentarioForm
-from .models import Trabalho, Comentario
-from django.contrib.auth.decorators import login_required
-
 
 @login_required
 def comentar_trabalho(request, trabalho_id):
@@ -203,13 +178,6 @@ def comentar_trabalho(request, trabalho_id):
         'trabalho': trabalho,
         'form': form
     })
-
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
-from .models import Comentario, Perfil
-
 
 @login_required
 def excluir_comentario(request, comentario_id):

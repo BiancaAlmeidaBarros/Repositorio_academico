@@ -1,7 +1,6 @@
-
 from django import forms
 from .models import Trabalho
-
+from .models import Comentario
 
 class RegistroForm(forms.Form):
     username = forms.CharField(label="Usuário")
@@ -17,11 +16,6 @@ class TrabalhoForm(forms.ModelForm):
     class Meta:
         model = Trabalho
         fields = ['titulo','descricao','arquivo']
-
-
-
-from django import forms
-from .models import Comentario
 
 class ComentarioForm(forms.ModelForm):
     class Meta:
